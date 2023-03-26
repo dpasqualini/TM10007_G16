@@ -9,15 +9,14 @@ def load_data():
     return data
 
 
-def load_Ft_set():
+def load_ft_set():
     this_directory = os.path.dirname(os.path.abspath(__file__))
     Ft_usable = pd.read_csv(os.path.join(this_directory, 'Ft_set.csv'), index_col=0)
 
     return Ft_usable
 
 
-def load_D_set():
-    this_directory = os.path.dirname(os.path.abspath(__file__))
-    D_usable = pd.read_csv(os.path.join(this_directory, 'D_set.csv'), index_col=0)
+def load_D_set(file_name):
+    file_path = os.path.join(os.getcwd(), file_name)
 
-    return D_usable
+    return pd.read_csv(file_path)
