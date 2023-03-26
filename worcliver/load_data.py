@@ -16,7 +16,8 @@ def load_ft_set():
     return Ft_usable
 
 
-def load_D_set(file_name):
-    file_path = os.path.join(os.getcwd(), file_name)
+def load_data():
+    this_directory = os.path.dirname(os.path.abspath(__file__))
+    D_usable = pd.read_csv(os.path.join(this_directory, 'D_set.csv'), index_col=0)
 
-    return pd.read_csv(file_path)
+    return D_usable
