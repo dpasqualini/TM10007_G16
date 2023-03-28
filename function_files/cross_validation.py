@@ -1,13 +1,5 @@
 import pandas as pd
 import os
-import numpy as np
-import matplotlib as plt
-
-from load_sets import load_D_set
-from self_made import return_X_y, removal_zero_var
-
-D_s = load_D_set()
-X_d, y_d = return_X_y(D_s)
 
 
 def cross_validation(data_set):
@@ -46,4 +38,4 @@ def cross_validation(data_set):
         X_Va_s.to_csv(os.path.join(data_folder_Va, 'X_Va_s{}.csv'.format(i)))
 
         if i == 11:
-            print(f'{i*2} Files have been created')
+            print(f'{i*2} Files have been created, in folder "datasets"')
