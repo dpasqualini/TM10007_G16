@@ -3,7 +3,6 @@ import os
 import numpy as np
 import matplotlib as plt
 
-from load_sets import load_D_set
 from sklearn.feature_selection import VarianceThreshold
 
 
