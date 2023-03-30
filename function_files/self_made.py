@@ -47,7 +47,7 @@ def removal_zero_var(feature_df):
     return df_filter
 
 
-def cross_validation(data_set, labels):
+def create_cross_val_sets(data_set, labels):
     '''
     This function will perform a stratified split of the data, and will result in 10 pairs of train and validation sets,
     consisting out of 90% and 10% of the design set, respectively.
@@ -104,9 +104,10 @@ def cross_validation(data_set, labels):
         if i == 11:
             print(f'{i*2*2} Files have been created, in folder "datasets"')
 
+
 def normalize_column(column):
     '''
-    This function will normalize a panda Series using the minimum-maximum scaling. 
+    This function will normalize a panda Series using the minimum-maximum scaling.
     It will return a new column with normalized numbers between 0 and 1. To apply this to a dataframe
     this function needs to be applied to each column (which can be done with the use of .apply())
     '''
