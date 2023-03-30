@@ -102,3 +102,14 @@ def cross_validation(data_set, labels):
 
         if i == 11:
             print(f'{i*2*2} Files have been created, in folder "datasets"')
+
+def normalize_column(column):
+    '''
+    This function will normalize a panda Series using the minimum-maximum scaling. 
+    It will return a new column with normalized numbers between 0 and 1. To apply this to a dataframe
+    this function needs to be applied to each column (which can be done with the use of .apply())
+    '''
+    feat = column.to_numpy()
+    minmax_scale = MinMaxScaler(feature_range=(0, 1))
+    feat_scaled = minmax_scale.fit_transform(feat.reshape(-1, 1))
+    return pd.Series(feat_scaled.flatten(), index=column.index)
