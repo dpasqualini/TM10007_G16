@@ -107,7 +107,7 @@ def create_cross_val_sets(data_set, labels):
 
 def normalize_column(column):
     '''
-    This function will normalize a panda Series using the minimum-maximum scaling. 
+    This function will normalize a panda Series using the minimum-maximum scaling.
     It will return a new column with normalized numbers between 0 and 1. To apply this to a dataframe
     this function needs to be applied to each column (which can be done with the use of .apply())
     '''
