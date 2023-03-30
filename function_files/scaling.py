@@ -4,8 +4,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from sklearn.preprocessing import MinMaxScaler
 
-from load_sets import load_D_set
-from self_made import return_X_y, removal_zero_var
+from self_made import return_X_y, removal_zero_var, load_D_set
 
 D_s = load_D_set()
 X_d, y_d = return_X_y(D_s)
