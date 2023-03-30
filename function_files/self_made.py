@@ -104,6 +104,7 @@ def create_cross_val_sets(data_set, labels):
         if i == 11:
             print(f'{i*2*2} Files have been created, in folder "datasets"')
 
+
 def normalize_column(column):
     '''
     This function will normalize a panda Series using the minimum-maximum scaling. 
