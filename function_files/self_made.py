@@ -47,7 +47,7 @@ def removal_zero_var(feature_df):
     return df_filter
 
 
-def create_cross_val_sets(data_set, labels):
+def second_split(data_set, labels):
     '''
     This function will perform a stratified split of the data, and will result in 10 pairs of train and validation sets,
     consisting out of 90% and 10% of the design set, respectively.
