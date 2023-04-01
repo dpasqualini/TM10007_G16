@@ -35,7 +35,7 @@ X_train_n = X_train.apply(normalize_column)
 X_train_n = X_train_n.to_numpy()
 
 # Perform PCA
-pca = PCA(n_components=10)
+pca = PCA(n_components=15)
 X_pca = pca.fit_transform(X_train_n)
 
 # Visualize the results

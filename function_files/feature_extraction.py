@@ -37,3 +37,6 @@ plt.style.context('seaborn-whitegrid')
 plt.axhline(y=80, color='r', linestyle='--')
 plt.plot(var)
 plt.show()
+
+print(var[13:25])
+print(f"From index 15 the PCA var becomes higher than 80%, namely: {var[15]}")
