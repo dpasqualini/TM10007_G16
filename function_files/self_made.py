@@ -1,10 +1,12 @@
 import pandas as pd
 import os
 import numpy as np
+import seaborn as sns
 import matplotlib.pyplot as plt
-from sklearn.preprocessing import MinMaxScaler
-from sklearn.preprocessing import OneHotEncoder
 
+from sklearn.preprocessing import MinMaxScaler
+from sklearn.manifold import TSNE
+from sklearn.discriminant_analysis import LinearDiscriminantAnalysis as LDA
 from sklearn.feature_selection import VarianceThreshold
 
 
@@ -175,3 +177,43 @@ def normalize_column(column):
     minmax_scale = MinMaxScaler(feature_range=(0, 1))
     feat_scaled = minmax_scale.fit_transform(feat.reshape(-1, 1))
     return pd.Series(feat_scaled.flatten(), index=column.index)
+
+
+def plt_tsne(df_features, labels):
+    '''
+    Using this function will return a 2 dimensional t-SNE plot.
+    May be used as visualisation and possible feature extraction.
+    '''
+
+    labels = labels['label'].replace({'benign': 0, 'malignant': 1})
+    labels = labels.to_numpy()
+    df_features = df_features.to_numpy()
+
+    # Perform PCA
+    tsne = TSNE(n_components=2, learning_rate="auto", perplexity=5)
+    X_tsne = tsne.fit_transform(df_features, labels)
+
+    # Plot the t-SNE representation colored by the labels
+    sns.scatterplot(x=X_tsne[:, 0], y=X_tsne[:, 1], hue=labels)
+    return plt.show()
+
+
+def plt_lda(df_features, labels):
+    '''
+    Using this function will return a 1 dimensional LDA plot. May be used as feature extraction.
+    '''
+
+    labels = labels['label'].replace({'benign': 0, 'malignant': 1})
+    labels = labels.to_numpy()
+    df_features = df_features.to_numpy()
+
+    # Perform PCA
+    lda = LDA()
+    X_lda = lda.fit_transform(df_features, labels)
+
+    # Plot the t-SNE representation colored by the labels
+    plt.scatter(X_lda, np.zeros_like(X_lda), c=labels)
+    plt.xlabel('LD1')
+    plt.ylim(-0.1, 0.1)
+
+    return plt.show()

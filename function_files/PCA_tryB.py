@@ -3,7 +3,7 @@ import os
 import numpy as np
 import matplotlib.pyplot as plt
 
-from self_made import return_X_y, removal_zero_var, load_Tr_set, normalize_column, load_Va_set
+from self_made import load_Tr_set, normalize_column
 
 # X_train, y_train = load_Tr_set(1)
 # y_train = y_train.to_numpy()
