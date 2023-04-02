@@ -3,6 +3,7 @@ import os
 import numpy as np
 import matplotlib.pyplot as plt
 from sklearn.preprocessing import MinMaxScaler
+from sklearn.preprocessing import OneHotEncoder
 
 from sklearn.feature_selection import VarianceThreshold
 
@@ -32,19 +33,6 @@ def return_X_y(df):
     y_d = df.pop('label').to_frame()
     X_d = df
     return X_d, y_d
-
-
-def removal_zero_var(feature_df):
-    '''
-    This function will remove zero-variance features from the dataset
-    '''
-    filter = VarianceThreshold(threshold=0.0)
-    df_filter = filter.fit_transform(feature_df)
-    features_kept = filter.get_support()
-    names = feature_df.columns[features_kept]
-    df_filter = pd.DataFrame(df_filter, columns=names)
-
-    return df_filter
 
 
 def second_split(data_set, labels):
@@ -106,6 +94,11 @@ def second_split(data_set, labels):
 
 
 def load_Tr_set(n):
+    '''
+    This function will load two dataframes, first containing the feature information and the second one containing
+    the labels from the specified training set.
+    '''
+
     X_Tr_s = "X_Tr_s" + str(n)
     y_Tr_s = "y_Tr_s" + str(n)
 
@@ -120,6 +113,10 @@ def load_Tr_set(n):
 
 
 def load_Va_set(n):
+    '''
+    This function will load two dataframes, first containing the feature information and the second one containing
+    the labels from the specified validation set.
+    '''
     X_Va_s = "X_Va_s" + str(n)
     y_Va_s = "y_Va_s" + str(n)
 
@@ -131,6 +128,41 @@ def load_Va_set(n):
     y_Va_s = pd.read_csv(os.path.join(data_folder_Tr, 'y_Va_s{}.csv'.format(n)), index_col=0)
 
     return X_Va_s, y_Va_s
+
+
+def preprocessing(feature_df):
+    '''
+    This function preprocesses the features by removing zero-variance, zero-filled,
+    and nan-filled features from the dataset.
+    '''
+
+    filter = VarianceThreshold(threshold=0.0)
+    df_filter1 = filter.fit_transform(feature_df)
+    features_kept = filter.get_support()
+    names = feature_df.columns[features_kept]
+    df_filter2 = pd.DataFrame(df_filter1, columns=names)
+    zero_var = pd.DataFrame(feature_df.columns[~features_kept], columns=["removed_features"])
+
+    # remove zero-filled features (if >50% is zero)
+    zero_percents = (df_filter2 == 0).sum() / len(df_filter2) * 100
+    threshold = 80
+    nonzero_cols = df_filter2.columns[zero_percents < threshold]
+    zero_cols = df_filter2.columns[zero_percents > threshold]
+    df_filter3 = pd.DataFrame(df_filter2, columns=nonzero_cols)
+
+    # remove nan-filled features (if >50% is NaN)
+    nan_percents = df_filter3.isna().sum() / len(df_filter3) * 100
+    threshold_nan = 50
+    nonnan_cols = df_filter3.columns[nan_percents < threshold_nan]
+    nan_cols = df_filter3.columns[nan_percents > threshold_nan]
+    df_filtered = pd.DataFrame(df_filter3, columns=nonnan_cols)
+
+    print(f"Number of removed columns due to zero-variance: {len(zero_var)}")
+    print(f"Number of removed non-zerovariance columns due to fraction zero > 50%: {len(zero_cols)}")
+    print(f"Number of removed non-zerovariance columns due to fraction NaN > 50%:  {len(nan_cols)}")
+    print(f'Remaining number of features after preprocessing: {df_filtered.shape[1]}')
+
+    return df_filtered, zero_var, zero_cols, nan_cols
 
 
 def normalize_column(column):
