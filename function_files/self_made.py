@@ -158,8 +158,8 @@ def preprocessing(feature_df):
     df_filtered = pd.DataFrame(df_filter3, columns=nonnan_cols)
 
     print(f"Number of removed columns due to zero-variance: {len(zero_var)}")
-    print(f"Number of removed non-zerovariance columns due to fraction zero > 50%: {len(zero_cols)}")
-    print(f"Number of removed non-zerovariance columns due to fraction NaN > 50%:  {len(nan_cols)}")
+    print(f"Number of removed non-zero-variance columns due to fraction zero > 80%: {len(zero_cols)}")
+    print(f"Number of removed non-zero-variance columns due to fraction NaN > 50%:  {len(nan_cols)}")
     print(f'Remaining number of features after preprocessing: {df_filtered.shape[1]}')
 
     return df_filtered, zero_var, zero_cols, nan_cols
