@@ -148,14 +148,14 @@ def preprocessing(feature_df):
     # remove zero-filled features (if >50% is zero)
     zero_percents = (df_filter2 == 0).sum() / len(df_filter2) * 100
     threshold = 80
-    nonzero_cols = df_filter2.columns[zero_percents < threshold]
+    nonzero_cols = df_filter2.columns[zero_percents <= threshold]
     zero_cols = df_filter2.columns[zero_percents > threshold]
     df_filter3 = pd.DataFrame(df_filter2, columns=nonzero_cols)
 
     # remove nan-filled features (if >50% is NaN)
     nan_percents = df_filter3.isna().sum() / len(df_filter3) * 100
     threshold_nan = 50
-    nonnan_cols = df_filter3.columns[nan_percents < threshold_nan]
+    nonnan_cols = df_filter3.columns[nan_percents <= threshold_nan]
     nan_cols = df_filter3.columns[nan_percents > threshold_nan]
     df_filtered = pd.DataFrame(df_filter3, columns=nonnan_cols)
 
@@ -189,7 +189,7 @@ def plt_tsne(df_features, labels):
     labels = labels.to_numpy()
     df_features = df_features.to_numpy()
 
-    # Perform PCA
+    # Perform TSNE
     tsne = TSNE(n_components=2, learning_rate="auto", perplexity=5)
     X_tsne = tsne.fit_transform(df_features, labels)
 
@@ -207,7 +207,7 @@ def plt_lda(df_features, labels):
     labels = labels.to_numpy()
     df_features = df_features.to_numpy()
 
-    # Perform PCA
+    # Perform LDA
     lda = LDA()
     X_lda = lda.fit_transform(df_features, labels)
 
