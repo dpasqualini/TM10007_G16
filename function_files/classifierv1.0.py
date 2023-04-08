@@ -5,7 +5,7 @@ import seaborn as sns
 from sklearn.decomposition import PCA
 import matplotlib.pyplot as plt
 from scipy.stats import ttest_ind
-from sklearn.ensemble import RandomForestClassifier,  RandomForestRegressor  # For classification and regression tasks
+from sklearn.ensemble import RandomForestClassifier # Not regressor as it is for continues variables
 from sklearn.metrics import f1_score
 
 from self_made import load_Tr_set, normalize_column
@@ -16,14 +16,12 @@ from sklearn import datasets as ds
 
 # Classifiers
 from sklearn.naive_bayes import GaussianNB
-from sklearn.discriminant_analysis import LinearDiscriminantAnalysis
-from sklearn.discriminant_analysis import QuadraticDiscriminantAnalysis
-from sklearn.linear_model import LogisticRegression
-from sklearn.linear_model import SGDClassifier
+from sklearn.discriminant_analysis import LinearDiscriminantAnalysis, QuadraticDiscriminantAnalysis
+from sklearn.linear_model import LogisticRegression, SGDClassifier
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.kernel_approximation import RBFSampler
-from sklearn import metrics
+from sklearn import metrics, svm
 
 # Load the data
 X_train, y_train = load_Tr_set(1)
@@ -151,7 +149,8 @@ print("Cov_matrix mal", cov_matrix_mal)
 
 # Define a list of classifiers
 clsfs = [LinearDiscriminantAnalysis(), QuadraticDiscriminantAnalysis(), GaussianNB(),
-         LogisticRegression(), SGDClassifier(), KNeighborsClassifier()]
+         LogisticRegression(), SGDClassifier(), KNeighborsClassifier(), 
+         RandomForestClassifier(), DecisionTreeClassifier(), svm.SVC()]
 
 # Loop over each classifier and fit the model, make predictions and compute metrics
 for clf in clsfs:
@@ -167,3 +166,5 @@ for clf in clsfs:
     print('Precision:', precision)
     print('Recall:', recall)
     print()
+
+# Waarom hebben Decisiontreeclassifier en Randomforrest 1.0 accuracy etc.?? overfitting??
