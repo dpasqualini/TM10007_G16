@@ -1,3 +1,5 @@
+''' Importing data'''
+
 import pandas as pd
 import os
 import numpy as np
@@ -185,17 +187,17 @@ def normalize_column(column):
     return pd.Series(feat_scaled.flatten(), index=column.index)
 
 
-# def normalize_column2(column2):
-#     '''
-#     This function will normalize a panda Series using the standard scaling.
-#     It will return a new column with normalized numbers with a mean of 0 and a standard deviation of 1. 
-#     Assumed is that the data has a normal distribution. To apply this to a dataframe
-#     this function needs to be applied to each column (which can be done with the use of .apply())
-#     '''
-#     feat2 = column2.to_numpy()
-#     standard_scale2 = StandardScaler()
-#     feat_scaled2 = standard_scale2.fit_transform(feat2.reshape(-1, 1))
-#     return pd.Series(feat_scaled2.flatten(), index=column2.index)
+def normalize_standard(column):
+    '''
+    This function will normalize a panda Series using the standard scaling.
+    It will return a new column with normalized numbers with a mean of 0 and a standard deviation of 1. 
+    Assumed is that the data has a normal distribution. To apply this to a dataframe
+    this function needs to be applied to each column (which can be done with the use of .apply())
+    '''
+    feat2 = column.to_numpy()
+    standard_scale = StandardScaler()
+    feat_scaled2 = standard_scale.fit_transform(feat2.reshape(-1, 1))
+    return pd.Series(feat_scaled2.flatten(), index=column.index)
 
 
 def plt_tsne(df_features, labels):
