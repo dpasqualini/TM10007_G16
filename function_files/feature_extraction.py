@@ -30,7 +30,12 @@ plt.show()
 
 
 print(covar_matrix.explained_variance_[0:15])
-print(f"From index 4 the PCA eigenvalue becomes lower than 1, namely: {covar_matrix.explained_variance_[4]}")
+
+for i, val in enumerate(covar_matrix.explained_variance_):
+    if val < 1:
+        print("The index of the first number that is lower than 1 is:", i)
+        break
+
 
 variance = covar_matrix.explained_variance_ratio_
 var = np.cumsum(np.round(covar_matrix.explained_variance_ratio_, decimals=3)*100)
@@ -43,5 +48,7 @@ plt.axhline(y=90, color='r', linestyle='--')
 plt.plot(var)
 plt.show()
 
-print(var[30:33])
-print(f"From index 15 the PCA var becomes higher than 90%, namely: {var[31]}")
+for j, val2 in enumerate(var):
+    if val2 > 90:
+        print("The index of the first number that is bigger than 90% is:", j)
+        break
