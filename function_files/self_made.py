@@ -4,7 +4,7 @@ import numpy as np
 import seaborn as sns
 import matplotlib.pyplot as plt
 
-from sklearn.preprocessing import MinMaxScaler
+from sklearn.preprocessing import MinMaxScaler, StandardScaler
 from sklearn.manifold import TSNE
 from sklearn.discriminant_analysis import LinearDiscriminantAnalysis as LDA
 from sklearn.feature_selection import VarianceThreshold
@@ -167,17 +167,28 @@ def preprocessing(feature_df):
     return df_filtered, zero_var, zero_cols, nan_cols
 
 
+# def normalize_column(column):
+#     '''
+#     This function will normalize a panda Series using the minimum-maximum scaling.
+#     It will return a new column with normalized numbers between 0 and 1. To apply this to a dataframe
+#     this function needs to be applied to each column (which can be done with the use of .apply())
+#     '''
+#     feat = column.to_numpy()
+#     minmax_scale = MinMaxScaler(feature_range=(0, 1))
+#     feat_scaled = minmax_scale.fit_transform(feat.reshape(-1, 1))
+#     return pd.Series(feat_scaled.flatten(), index=column.index)
+
 def normalize_column(column):
     '''
-    This function will normalize a panda Series using the minimum-maximum scaling.
-    It will return a new column with normalized numbers between 0 and 1. To apply this to a dataframe
+    This function will normalize a panda Series using the standard scaling.
+    It will return a new column with normalized numbers with a mean of 0 and a standard deviation of 1. 
+    Assumed is that the data has a normal distribution. To apply this to a dataframe
     this function needs to be applied to each column (which can be done with the use of .apply())
     '''
     feat = column.to_numpy()
-    minmax_scale = MinMaxScaler(feature_range=(0, 1))
-    feat_scaled = minmax_scale.fit_transform(feat.reshape(-1, 1))
+    standard_scale = StandardScaler()
+    feat_scaled = standard_scale.fit_transform(feat.reshape(-1, 1))
     return pd.Series(feat_scaled.flatten(), index=column.index)
-
 
 def plt_tsne(df_features, labels):
     '''
