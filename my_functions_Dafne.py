@@ -147,32 +147,26 @@ def preprocessing(feature_df):
     df_filter2 = pd.DataFrame(df_filter1, columns=names)
     zero_var = pd.DataFrame(feature_df.columns[~features_kept], columns=["removed_features"])
 
-    # remove features with standard deviation lower than 0.1
-    std_dev = df_filter2.std()
-    low_std_dev = std_dev[std_dev < 0.1].index.tolist()
-    df_filter3 = df_filter2.drop(columns=low_std_dev)
-
-    # remove zero-filled features (if >50% is zero)
-    zero_percents = (df_filter3 == 0).sum() / len(df_filter3) * 100
+    # remove zero-filled features (if >80% is zero)
+    zero_percents = (df_filter2 == 0).sum() / len(df_filter2) * 100
     threshold = 80
-    nonzero_cols = df_filter3.columns[zero_percents <= threshold]
-    zero_cols = df_filter3.columns[zero_percents > threshold]
-    df_filter4 = pd.DataFrame(df_filter3, columns=nonzero_cols)
+    nonzero_cols = df_filter2.columns[zero_percents <= threshold]
+    zero_cols = df_filter2.columns[zero_percents > threshold]
+    df_filtered = pd.DataFrame(df_filter2, columns=nonzero_cols)
 
-    # remove nan-filled features (if >50% is NaN)
-    nan_percents = df_filter4.isna().sum() / len(df_filter3) * 100
-    threshold_nan = 50
-    nonnan_cols = df_filter4.columns[nan_percents <= threshold_nan]
-    nan_cols = df_filter4.columns[nan_percents > threshold_nan]
-    df_filtered = pd.DataFrame(df_filter4, columns=nonnan_cols)
+    # # remove nan-filled features (if >50% is NaN)
+    # nan_percents = df_filter3.isna().sum() / len(df_filter3) * 100
+    # threshold_nan = 50
+    # nonnan_cols = df_filter3.columns[nan_percents <= threshold_nan]
+    # nan_cols = df_filter3.columns[nan_percents > threshold_nan]
+    # df_filtered = pd.DataFrame(df_filter3, columns=nonnan_cols)
 
     print(f"Number of removed columns due to zero-variance: {len(zero_var)}")
-    print(f"Number of removed columns due to standard deviation < 0.1: {len(low_std_dev)}")
     print(f"Number of removed non-zero-variance columns due to fraction zero > 80%: {len(zero_cols)}")
-    print(f"Number of removed non-zero-variance columns due to fraction NaN > 50%:  {len(nan_cols)}")
+    # print(f"Number of removed non-zero-variance columns due to fraction NaN > 50%:  {len(nan_cols)}")
     print(f'Remaining number of features after preprocessing: {df_filtered.shape[1]}')
 
-    return df_filtered, zero_var, low_std_dev, zero_cols, nan_cols
+    return df_filtered, zero_var, zero_cols
 
 
 def normalize_column(column):
