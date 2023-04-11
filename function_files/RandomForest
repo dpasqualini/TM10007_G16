@@ -1,0 +1,59 @@
+
+import pandas as pd
+import os
+import numpy as np
+from sklearn.decomposition import PCA
+import matplotlib.pyplot as plt
+from scipy.stats import ttest_ind
+from sklearn.ensemble import RandomForestClassifier,  RandomForestRegressor  # For classification and regression tasks
+from sklearn.metrics import f1_score
+from self_made import load_Tr_set, load_Va_set, normalize_column
+
+
+# ##################### Trying to do some Random Forest ########
+X_train, y_train = load_Tr_set(6)
+y_train = y_train.to_numpy()
+X_val, y_val = load_Va_set(6)
+y_val = y_val.to_numpy()
+
+# Convert NumPy array to pandas DataFrame
+y_train_df = pd.DataFrame(y_train)
+y_train_bin = y_train_df.iloc[:, 0].replace({'benign': 0, 'malignant': 1})
+y_train_bin = y_train_bin.to_numpy()
+
+y_val_df = pd.DataFrame(y_val)
+y_val_bin = y_val_df.iloc[:, 0].replace({'benign': 0, 'malignant': 1})
+y_val_bin = y_val_bin.to_numpy()
+
+X_train_n = X_train.apply(normalize_column)
+X_val_n = X_val.apply(normalize_column)
+
+X_train_n = X_train_n.to_numpy()
+X_val_n = X_val_n.to_numpy()
+
+# Perform PCA
+pca = PCA(n_components=13)
+X_train_pca = pca.fit_transform(X_train_n)
+X_val_pca = pca.fit_transform(X_val_n)
+
+# Visualize the results
+plt.scatter(X_train_pca[:, 0], X_train_pca[:, 1], c=y_train_bin, cmap='viridis')
+plt.xlabel('Principal Component 1')
+plt.ylabel('Principal Component 2')
+plt.show()
+
+rfc = RandomForestClassifier(n_estimators=100, max_depth=5, random_state=42) # For classification tasks
+rfr = RandomForestRegressor(n_estimators=100, max_depth=5, random_state=42) # For regression tasks
+
+rfc.fit(X_train_pca, y_train_bin) # For classification tasks
+rfr.fit(X_train_pca, y_train_bin) # For regression tasks
+
+y_predc = rfc.predict(X_val_pca) # For classification tasks
+y_predr = rfr.predict(X_val_pca) # For regression tasks
+
+# Evaluate the performance of the classifier
+f1c = f1_score(y_val_bin, y_predc, average='macro')
+print("F1c-score: ", f1c)
+# Evaluate the performance of the classifier
+f1r = f1_score(y_val_bin, y_predr, average='macro')
+print("F1r-score: ", f1r)
