@@ -385,28 +385,3 @@ def classifiers(clsfs, X_pca, y_train):
         print('Recall:', recall)
         print()
     return f1_scores
-
-# Split in training and testing
-X_train, X_test, y_train, y_test = train_test_split(X, Y, test_size=0.33, random_state=42)
-
-# Fit a simple LDA without feature selection and plot an ROC curve
-clf = LDA()
-clf.fit(X_train, y_train)
-y_score = clf.predict_proba(X_test)
-plot_roc_curve(y_score, y_test)
-
-
-# Now first use the selectfrom model module. Select all features with a weight above the median.
-selector = SelectFromModel(estimator=Lasso(alpha=10**(-10), random_state=42), threshold='median')
-selector.fit(X_train, y_train)
-n_original = X_train.shape[1]
-X_train = selector.transform(X_train)
-X_test = selector.transform(X_test)
-n_selected = X_train.shape[1]
-print(f"Selected {n_selected} from {n_original} features.")
-
-# Fit the LDA on selected features
-clf = LDA()
-clf.fit(X_train, y_train)
-y_score = clf.predict_proba(X_test)
-plot_roc_curve(y_score, y_test)
