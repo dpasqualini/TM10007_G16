@@ -53,3 +53,56 @@ plt.xlabel("Feature number")
 plt.ylabel(r"Univariate score ($-Log(p_{value})$)")
 plt.show()
 
+
+
+
+# Fit a simple LDA without feature selection and plot an ROC curve
+clf = LDA()
+clf.fit(X_tr_norm, y_tr1.to_numpy().reshape(-1,))
+y_score = clf.predict_proba(X_tr_norm)
+
+from sklearn.preprocessing import LabelEncoder
+from sklearn.metrics import roc_auc_score
+
+le = LabelEncoder()
+y_tr1_bin = le.fit_transform(y_tr1.to_numpy().reshape(-1,))
+fpr,tpr,thesholds = roc_curve(y_tr1_bin, y_score[:, 1])
+
+feature_sizes = [40, 80, 120, 160]
+
+plt.figure(figsize=(8,8))
+for size in feature_sizes:
+    model = LogisticRegression(max_iter=1000)
+    rfe = RFE(estimator=model, n_features_to_select=115)
+    rfe.fit(X_tr_norm, y_tr1.to_numpy().reshape(-1,))
+    sel_features = X_tr_norm.columns[rfe.support_]
+    X_tr_norm_sel= X_tr_norm.loc[:, sel_features]
+    # Fit the LDA on selected features
+    clf_sel = LDA()
+    clf_sel.fit(X_tr_norm_sel, y_tr1.to_numpy().reshape(-1,))
+    y_score_sel = clf.predict_proba(X_tr_norm_sel)
+
+    n_original = X_tr_norm.shape[1]
+    n_selected = X_tr_norm_sel.shape[1]
+    print(f"Selected {n_selected} from {n_original} features.")
+
+    fpr_sel,tpr_sel,thesholds_sel = roc_curve(y_tr1_bin, y_score_sel[:, 1])
+    roc_auc_sel = roc_auc_score(y_tr1_bin, y_score_sel[:, 1])
+
+    plt.plot(fpr_sel, tpr_sel, label=f"{size} features (AUC = {roc_auc_sel:.2f})")
+
+plt.xlabel("False Positive Rate")
+plt.ylabel("True Positive Rate")
+plt.title("ROC Curve by Feature Selection")
+plt.legend(loc="lower right")
+plt.show()
+
+
+X_tr_norm_sel.boxplot(figsize=(10,5))
+plt.title('Normalised data scaled by standard scaling after feature selection by RFE')
+plt.show()
+
+# plt.xlabel('False Positive Rate')
+# plt.ylabel('True Positive Rate')
+# plt.title('ROC Curve')
+# plt.show()
